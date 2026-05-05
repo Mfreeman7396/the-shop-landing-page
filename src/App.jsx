@@ -1,8 +1,8 @@
-import Admin from "./Admin.jsx";
 import { useState } from "react";
 import { db } from "./firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import "./App.css";
+import Admin from "./admin.jsx";
 import navLogo from "./assets/theshop1transparent.png";
 
 

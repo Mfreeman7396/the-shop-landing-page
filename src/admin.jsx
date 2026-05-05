@@ -8,7 +8,7 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
-import navLogo from "./assets/theshop1transparent.png";
+import navLogo from "./assets/Theshop1transparent.png";
 import "./admin.css";
 
 function Admin() {

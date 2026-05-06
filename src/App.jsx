@@ -1,18 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { db } from "./firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import "./App.css";
 import Admin from "./admin.jsx";
 import navLogo from "./assets/Theshop1transparent.png";
 
-
-
 function App() {
-  
+  if (window.location.pathname === "/admin") {
+    return <Admin />;
+  }
 
-    if (window.location.pathname === "/admin") {
-      return <Admin />;
-    }
+  const [menuOpen, setMenuOpen] = useState(false);
+
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -23,19 +22,21 @@ function App() {
 
   const [status, setStatus] = useState("");
   const [loading, setLoading] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
-  const scrollToWaitlist = () => {
-    document.getElementById("waitlist")?.scrollIntoView({ behavior: "smooth" });
+  const scrollToSection = (id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    setMenuOpen(false);
   };
 
   const handleJoinWaitlist = () => {
     setFormData((prev) => ({ ...prev, role: "Customer" }));
-    scrollToWaitlist();
+    scrollToSection("waitlist");
   };
 
   const handleApplyMechanic = () => {
     setFormData((prev) => ({ ...prev, role: "Mechanic" }));
-    scrollToWaitlist();
+    scrollToSection("waitlist"); // 🔥 FIXED
   };
 
   const handleChange = (e) => {
@@ -44,6 +45,15 @@ function App() {
       [e.target.name]: e.target.value,
     }));
   };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const submitSignup = async () => {
     if (!formData.fullName.trim() || !formData.email.trim()) {
@@ -86,21 +96,40 @@ function App() {
 
   return (
     <div className="app">
-      <header className="topbar">
+      <header className={`topbar ${scrolled ? "scrolled" : ""}`}>
         <a href="#" className="brand">
           <img src={navLogo} alt="The Shop Logo" />
         </a>
 
         <div className="topActions">
-          <button type="button" className="topPrimary" onClick={handleJoinWaitlist}>
+          <button className="topPrimary" onClick={handleJoinWaitlist}>
             Join Waitlist
           </button>
-          <button type="button" className="topSecondary" onClick={handleApplyMechanic}>
+          <button className="topSecondary" onClick={handleApplyMechanic}>
             Apply as Mechanic
           </button>
         </div>
 
-        <button type="button" className="menuBtn">☰</button>
+        <button className="menuBtn" onClick={() => setMenuOpen(!menuOpen)}>
+          ☰
+        </button>
+
+        {menuOpen && (
+          <div className="dropdownMenu">
+            <button onClick={() => scrollToSection("how-it-works")}>
+              How It Works
+            </button>
+            <button onClick={() => scrollToSection("mechanics")}>
+              Mechanics Wanted
+            </button>
+            <button onClick={() => scrollToSection("waitlist")}>
+              Get Early Access
+            </button>
+            <button onClick={() => scrollToSection("contact")}>
+              Contact Us
+            </button>
+          </div>
+        )}
       </header>
 
       <main>
@@ -120,10 +149,10 @@ function App() {
             </p>
 
             <div className="heroButtons">
-              <button type="button" className="primaryBtn" onClick={handleJoinWaitlist}>
+              <button className="primaryBtn" onClick={handleJoinWaitlist}>
                 Join Waitlist
               </button>
-              <button type="button" className="secondaryBtn" onClick={handleApplyMechanic}>
+              <button className="secondaryBtn" onClick={handleApplyMechanic}>
                 Apply as Mechanic
               </button>
             </div>
@@ -136,7 +165,7 @@ function App() {
           </div>
         </section>
 
-        <section className="section howSection">
+        <section className="section howSection" id="how-it-works">
           <p className="sectionLabel">How It Works</p>
           <h2>Your Car. Wherever You Are.</h2>
 
@@ -164,12 +193,8 @@ function App() {
         <section className="section mechanicSection" id="mechanics">
           <p className="sectionLabel">Mechanics Wanted</p>
           <h2>Certified Mobile Mechanics, Join Early.</h2>
-          <p className="sectionText">
-            Build your profile, set your service area, and be ready for customers
-            when The Shop launches.
-          </p>
 
-          <button type="button" className="primaryBtn sectionBtn" onClick={handleApplyMechanic}>
+          <button className="primaryBtn sectionBtn" onClick={handleApplyMechanic}>
             Apply as Mechanic
           </button>
         </section>
@@ -180,7 +205,6 @@ function App() {
 
           <form className="form" onSubmit={handleSubmit}>
             <input
-              type="text"
               name="fullName"
               placeholder="Full Name"
               value={formData.fullName}
@@ -188,7 +212,6 @@ function App() {
             />
 
             <input
-              type="email"
               name="email"
               placeholder="Email Address"
               value={formData.email}
@@ -196,7 +219,6 @@ function App() {
             />
 
             <input
-              type="tel"
               name="phone"
               placeholder="Phone Number"
               value={formData.phone}
@@ -209,24 +231,60 @@ function App() {
             </select>
 
             <input
-              type="text"
               name="location"
               placeholder="City, State"
               value={formData.location}
               onChange={handleChange}
             />
 
-            <button
-              type="button"
-              className="primaryBtn"
-              onClick={submitSignup}
-              disabled={loading}
-            >
-              {loading ? "Submitting..." : "Submit"}
-            </button>
+<button
+  type="button"
+  className="primaryBtn"
+  onClick={submitSignup}
+  disabled={loading}
+>
+  {loading ? "Submitting..." : "Submit"}
+</button>
 
-            {status && <p className="formStatus">{status}</p>}
+            {status && <p>{status}</p>}
           </form>
+        </section>
+
+        <section className="section contactSection" id="contact">
+          <p className="sectionLabel">Contact Us</p>
+          <h2>Have Questions?</h2>
+
+          <p className="sectionText">
+            For customer support, mechanic onboarding, or partnerships,
+            reach out and our team will respond within 24 hours.
+          </p>
+
+          <div className="contactBox">
+            <p style={{ color: "#9fd5ff", fontWeight: "700" }}>
+              ⏱ We typically respond within 24 hours
+            </p>
+
+            <div className="contactItem">
+              <span>📧 Support</span>
+              <span>
+                <a href="mailto:support.theshopmobile@gmail.com">
+                  support.theshopmobile@gmail.com
+                </a>
+              </span>
+            </div>
+
+            <div className="contactItem">
+              <span>📞 Phone</span>
+              <span>
+                <a href="tel:+12527229007">(252) 722-9007</a>
+              </span>
+            </div>
+
+            <div className="contactItem">
+              <span>📍 Service Area</span>
+              <span>Richmond, Virginia & Surrounding Areas</span>
+            </div>
+          </div>
         </section>
       </main>
 

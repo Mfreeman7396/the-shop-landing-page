@@ -1,3 +1,4 @@
+import MechanicCRM from "./MechanicCRM";
 import { useEffect, useMemo, useState } from "react";
 import { db } from "./firebase";
 import {
@@ -16,6 +17,7 @@ function Admin() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("All");
   const [search, setSearch] = useState("");
+  const [showMechanicCRM, setShowMechanicCRM] = useState(false);
 
   const fetchSignups = async () => {
     setLoading(true);
@@ -55,6 +57,7 @@ function Admin() {
     if (activeTab === "Mechanics") list = mechanics;
 
     const term = search.toLowerCase().trim();
+
     if (!term) return list;
 
     return list.filter((s) =>
@@ -111,7 +114,9 @@ function Admin() {
 
     const csvContent = [headers, ...rows]
       .map((row) =>
-        row.map((value) => `"${String(value).replace(/"/g, '""')}"`).join(",")
+        row.map((value) =>
+          `"${String(value).replace(/"/g, '""')}"`
+        ).join(",")
       )
       .join("\n");
 
@@ -120,30 +125,62 @@ function Admin() {
     });
 
     const url = URL.createObjectURL(blob);
+
     const link = document.createElement("a");
 
     link.href = url;
     link.download = `the-shop-launch-signups.csv`;
+
     link.click();
 
     URL.revokeObjectURL(url);
   };
+
+  // IMPORTANT:
+  // KEEP THIS DOWN HERE AFTER ALL HOOKS
+  if (showMechanicCRM) {
+    return (
+      <MechanicCRM
+        onBack={() => setShowMechanicCRM(false)}
+      />
+    );
+  }
 
   return (
     <div className="admin-page">
       <div className="admin-shell">
         <header className="admin-header">
           <div>
-            <img src={navLogo} alt="The Shop" className="admin-logo" />
-            <p className="admin-subtitle">Launch Signup Admin</p>
+            <img
+              src={navLogo}
+              alt="The Shop"
+              className="admin-logo"
+            />
+
+            <p className="admin-subtitle">
+              Launch Signup Admin
+            </p>
           </div>
 
           <div className="header-actions">
-            <button onClick={exportCSV} className="export-btn">
+            <button
+              onClick={() => setShowMechanicCRM(true)}
+              className="refresh-btn"
+            >
+              Mechanic CRM
+            </button>
+
+            <button
+              onClick={exportCSV}
+              className="export-btn"
+            >
               Export CSV
             </button>
 
-            <button onClick={fetchSignups} className="refresh-btn">
+            <button
+              onClick={fetchSignups}
+              className="refresh-btn"
+            >
               Refresh
             </button>
           </div>
@@ -172,7 +209,9 @@ function Admin() {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`tab-btn ${activeTab === tab ? "active" : ""}`}
+                className={`tab-btn ${
+                  activeTab === tab ? "active" : ""
+                }`}
               >
                 {tab}
               </button>
@@ -194,19 +233,30 @@ function Admin() {
           </div>
 
           {loading ? (
-            <p className="empty">Loading signups...</p>
+            <p className="empty">
+              Loading signups...
+            </p>
           ) : filteredSignups.length === 0 ? (
-            <p className="empty">No signups found.</p>
+            <p className="empty">
+              No signups found.
+            </p>
           ) : (
             <div className="scroll-list">
               {filteredSignups.map((user) => (
-                <div key={user.id} className="lead-card">
+                <div
+                  key={user.id}
+                  className="lead-card"
+                >
                   <div className="lead-top">
-                    <h3>{user.fullName || "No Name"}</h3>
+                    <h3>
+                      {user.fullName || "No Name"}
+                    </h3>
 
                     <span
                       className={`role-badge ${
-                        user.role === "Mechanic" ? "mechanic" : "customer"
+                        user.role === "Mechanic"
+                          ? "mechanic"
+                          : "customer"
                       }`}
                     >
                       {user.role || "Unknown"}
@@ -215,32 +265,67 @@ function Admin() {
 
                   <div className="info-grid">
                     <p>
-                      <strong>Email:</strong> {user.email || "N/A"}
+                      <strong>Email:</strong>{" "}
+                      {user.email || "N/A"}
                     </p>
+
                     <p>
-                      <strong>Phone:</strong> {user.phone || "N/A"}
+                      <strong>Phone:</strong>{" "}
+                      {user.phone || "N/A"}
                     </p>
+
                     <p>
-                      <strong>Location:</strong> {user.location || "N/A"}
+                      <strong>Location:</strong>{" "}
+                      {user.location || "N/A"}
                     </p>
+
                     <p>
-                      <strong>Submitted:</strong> {formatDate(user.createdAt)}
+                      <strong>Submitted:</strong>{" "}
+                      {formatDate(user.createdAt)}
                     </p>
                   </div>
 
                   <select
                     className="lead-select"
                     value={user.leadStatus || "New Lead"}
-                    onChange={(e) => handleLeadChange(user.id, e.target.value)}
+                    onChange={(e) =>
+                      handleLeadChange(
+                        user.id,
+                        e.target.value
+                      )
+                    }
                   >
-                    <option value="New Lead">New Lead</option>
-                    <option value="Hot Lead">Hot Lead</option>
-                    <option value="Warm Lead">Warm Lead</option>
-                    <option value="Cold Lead">Cold Lead</option>
-                    <option value="Contacted">Contacted</option>
-                    <option value="Follow Up">Follow Up</option>
-                    <option value="Converted">Converted</option>
-                    <option value="Not Interested">Not Interested</option>
+                    <option value="New Lead">
+                      New Lead
+                    </option>
+
+                    <option value="Hot Lead">
+                      Hot Lead
+                    </option>
+
+                    <option value="Warm Lead">
+                      Warm Lead
+                    </option>
+
+                    <option value="Cold Lead">
+                      Cold Lead
+                    </option>
+
+                    <option value="Contacted">
+                      Contacted
+                    </option>
+
+                    <option value="Follow Up">
+                      Follow Up
+                    </option>
+
+                    <option value="Converted">
+                      Converted
+                    </option>
+
+                    <option value="Not Interested">
+                      Not Interested
+                    </option>
                   </select>
                 </div>
               ))}

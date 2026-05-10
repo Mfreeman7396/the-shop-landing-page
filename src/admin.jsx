@@ -1,4 +1,4 @@
-import MechanicCRM from "./MechanicCRM";
+import MechanicCRM from "./mechanicCRM.jsx";
 import { useEffect, useMemo, useState } from "react";
 import { db } from "./firebase";
 import {

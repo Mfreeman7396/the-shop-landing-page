@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { db } from "./firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import "./App.css";
-import Admin from "./Admin.jsx";
+import Admin from "./admin.jsx";
 import navLogo from "./assets/Theshop1transparent.png";
 
 function App() {

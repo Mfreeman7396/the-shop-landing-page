@@ -11,7 +11,7 @@ import {
   serverTimestamp,
   updateDoc,
 } from "firebase/firestore";
-import "./mechaniccrm.css";
+import "./mechanicCRM.css";
 
 const initialForm = {
   businessName: "",

@@ -5,8 +5,96 @@ import "./App.css";
 import Admin from "./admin.jsx";
 import navLogo from "./assets/Theshop1transparent.png";
 
+const translations = {
+  en: {
+    launchDate: "Launching June 16, 2026",
+    headlineTop: "Your Car.",
+    headlineAccent: "Wherever You Are.",
+    heroText:
+      "Experienced mobile mechanics come to you, whether you're at home, work, or stuck on the road.",
+    joinWaitlist: "Early Customer Access",
+    applyMechanic: "Apply as Mechanic",
+    experiencedMechanics: "Experienced Mechanics",
+    qualityService: "Quality Service",
+    transparentPricing: "Fair & Transparent Pricing",
+    howItWorks: "How It Works",
+    mechanicsWanted: "Mechanics Wanted",
+    getEarlyAccess: "Early Customer Access",
+    aboutUs: "About Us",
+    backHome: "Back Home",
+    aboutLabel: "About The Shop",
+    aboutTitle: "Built for clearer, easier mobile mechanic service.",
+    aboutIntro:
+      "The Shop is a modern platform built to connect customers with trusted mobile mechanics in their area.",
+    aboutParagraphs: [
+      "Whether your vehicle will not start, needs maintenance, or requires diagnostics, The Shop helps make getting help faster, clearer, and more convenient.",
+      "Instead of spending hours searching for a shop, waiting for a tow truck, or wondering when a mechanic will arrive, customers can request service directly from their phone and connect with mechanics who come to them.",
+      "The Shop was designed for people who need reliable vehicle service at home, work, on the roadside, or anywhere in between.",
+      "Customers can request mobile mechanic services, save vehicles in a personal garage, track appointments and updates, chat with mechanics, view pricing before confirming appointments, and schedule service without unnecessary confusion.",
+      "The Shop is also built to help mechanics grow. Independent mechanics and mobile technicians can receive service requests nearby, set their own pricing, manage schedules and availability, communicate with customers, build reviews, and grow their business using a modern platform.",
+      "Our goal is to create opportunities for hardworking mechanics while making vehicle service easier and more transparent for customers.",
+      "The Shop focuses on clear scheduling, transparent pricing, real-time updates, customer and mechanic communication, and a simpler service experience.",
+      "The mission is simple: make mobile mechanic service more accessible, more professional, and easier for everyone involved.",
+    ],
+    aboutCustomerTitle: "For Customers",
+    aboutCustomerText:
+      "Request help from your phone, compare clear service details, and connect with mobile mechanics who come to your home, workplace, roadside location, or anywhere in between.",
+    aboutMechanicTitle: "For Mechanics",
+    aboutMechanicText:
+      "Receive nearby requests, manage availability, set pricing, communicate with customers, earn reviews, and grow a mobile service business with modern tools.",
+    aboutTrustTitle: "Built on Trust",
+    aboutTrustText:
+      "Transparent pricing, clear scheduling, real-time updates, and direct communication help customers and mechanics work with confidence.",
+  },
+  es: {
+    launchDate: "Lanzamiento el 16 de junio de 2026",
+    headlineTop: "Tu auto.",
+    headlineAccent: "Dondequiera que estés.",
+    heroText:
+      "Mecánicos móviles con experiencia van a ti, ya sea que estés en casa, en el trabajo o varado en la carretera.",
+    joinWaitlist: "Acceso anticipado para clientes",
+    applyMechanic: "Aplicar como mecánico",
+    experiencedMechanics: "Mecánicos con experiencia",
+    qualityService: "Servicio de calidad",
+    transparentPricing: "Precios justos y transparentes",
+    howItWorks: "Cómo funciona",
+    mechanicsWanted: "Buscamos mecánicos",
+    getEarlyAccess: "Acceso anticipado para clientes",
+    aboutUs: "Acerca de nosotros",
+    backHome: "Volver al inicio",
+    aboutLabel: "Acerca de The Shop",
+    aboutTitle: "Creado para un servicio mecánico móvil más claro y fácil.",
+    aboutIntro:
+      "The Shop es una plataforma moderna creada para conectar a clientes con mecánicos móviles confiables en su área.",
+    aboutParagraphs: [
+      "Ya sea que tu vehículo no arranque, necesite mantenimiento o requiera diagnóstico, The Shop ayuda a que recibir ayuda sea más rápido, claro y conveniente.",
+      "En lugar de pasar horas buscando un taller, esperar una grúa o preguntarte cuándo llegará un mecánico, los clientes pueden solicitar servicio directamente desde su teléfono y conectar con mecánicos que van a ellos.",
+      "The Shop fue diseñado para personas que necesitan servicio confiable para su vehículo en casa, en el trabajo, en la carretera o en cualquier punto intermedio.",
+      "Los clientes pueden solicitar servicios de mecánica móvil, guardar vehículos en un garage personal, seguir citas y actualizaciones, chatear con mecánicos, ver precios antes de confirmar citas y programar servicio sin confusión innecesaria.",
+      "The Shop también está diseñado para ayudar a los mecánicos a crecer. Mecánicos independientes y técnicos móviles pueden recibir solicitudes cercanas, establecer sus propios precios, administrar horarios y disponibilidad, comunicarse con clientes, construir reseñas y hacer crecer su negocio con una plataforma moderna.",
+      "Nuestro objetivo es crear oportunidades para mecánicos trabajadores mientras hacemos que el servicio vehicular sea más fácil y transparente para los clientes.",
+      "The Shop se enfoca en programación clara, precios transparentes, actualizaciones en tiempo real, comunicación entre clientes y mecánicos, y una experiencia de servicio más simple.",
+      "La misión es simple: hacer que el servicio mecánico móvil sea más accesible, más profesional y más fácil para todos.",
+    ],
+    aboutCustomerTitle: "Para clientes",
+    aboutCustomerText:
+      "Solicita ayuda desde tu teléfono, compara detalles claros del servicio y conecta con mecánicos móviles que van a tu casa, trabajo, ubicación en carretera o cualquier punto intermedio.",
+    aboutMechanicTitle: "Para mecánicos",
+    aboutMechanicText:
+      "Recibe solicitudes cercanas, administra disponibilidad, establece precios, comunícate con clientes, gana reseñas y haz crecer un negocio móvil con herramientas modernas.",
+    aboutTrustTitle: "Construido sobre confianza",
+    aboutTrustText:
+      "Precios transparentes, programación clara, actualizaciones en tiempo real y comunicación directa ayudan a clientes y mecánicos a trabajar con confianza.",
+  },
+};
+
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [route, setRoute] = useState(() => window.location.pathname);
+  const [language, setLanguage] = useState(() => {
+    if (typeof window === "undefined") return "en";
+    return localStorage.getItem("language") === "es" ? "es" : "en";
+  });
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -20,7 +108,42 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  const isAdminPage = window.location.pathname === "/admin";
+  const isAdminPage = route === "/admin";
+  const isAboutPage = route === "/about";
+  const t = translations[language];
+
+  const handleLanguageChange = (nextLanguage) => {
+    setLanguage(nextLanguage);
+    localStorage.setItem("language", nextLanguage);
+  };
+
+  const navigateTo = (nextRoute) => {
+    window.history.pushState({}, "", nextRoute);
+    setRoute(nextRoute);
+    setMenuOpen(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const navigateHomeSection = (id, role) => {
+    if (role) {
+      setFormData((prev) => ({
+        ...prev,
+        role,
+      }));
+    }
+
+    if (route !== "/") {
+      window.history.pushState({}, "", "/");
+      setRoute("/");
+      setMenuOpen(false);
+      window.setTimeout(() => {
+        scrollToSection(id);
+      }, 0);
+      return;
+    }
+
+    scrollToSection(id);
+  };
 
   const scrollToSection = (id) => {
     document.getElementById(id)?.scrollIntoView({
@@ -31,21 +154,11 @@ function App() {
   };
 
   const handleJoinWaitlist = () => {
-    setFormData((prev) => ({
-      ...prev,
-      role: "Customer",
-    }));
-
-    scrollToSection("waitlist");
+    navigateHomeSection("waitlist", "Customer");
   };
 
   const handleApplyMechanic = () => {
-    setFormData((prev) => ({
-      ...prev,
-      role: "Mechanic",
-    }));
-
-    scrollToSection("waitlist");
+    navigateHomeSection("waitlist", "Mechanic");
   };
 
   const handleChange = (e) => {
@@ -68,6 +181,19 @@ function App() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [isAdminPage]);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setRoute(window.location.pathname);
+      setMenuOpen(false);
+    };
+
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
 
   const submitSignup = async () => {
     if (!formData.fullName.trim() || !formData.email.trim()) {
@@ -135,18 +261,54 @@ function App() {
   return (
     <div className="app">
       <header className={`topbar ${scrolled ? "scrolled" : ""}`}>
-        <a href="#" className="brand">
+        <a
+          href="/"
+          className="brand"
+          onClick={(e) => {
+            e.preventDefault();
+            navigateTo("/");
+          }}
+        >
           <img src={navLogo} alt="The Shop Logo" />
         </a>
 
         <div className="topActions">
-          <button className="topPrimary" onClick={handleJoinWaitlist}>
-            Join Waitlist
-          </button>
+          <div className="languageToggle" aria-label="Select language">
+            <button
+              className={language === "en" ? "active" : ""}
+              type="button"
+              onClick={() => handleLanguageChange("en")}
+              aria-pressed={language === "en"}
+            >
+              EN
+            </button>
+            <button
+              className={language === "es" ? "active" : ""}
+              type="button"
+              onClick={() => handleLanguageChange("es")}
+              aria-pressed={language === "es"}
+            >
+              ES
+            </button>
+          </div>
 
-          <button className="topSecondary" onClick={handleApplyMechanic}>
-            Apply as Mechanic
-          </button>
+          {isAboutPage && (
+            <button className="topNavLink" onClick={() => navigateTo("/")}>
+              {t.backHome}
+            </button>
+          )}
+
+          {!isAboutPage && (
+            <>
+              <button className="topPrimary" onClick={handleJoinWaitlist}>
+                {t.joinWaitlist}
+              </button>
+
+              <button className="topSecondary" onClick={handleApplyMechanic}>
+                {t.applyMechanic}
+              </button>
+            </>
+          )}
         </div>
 
         <button className="menuBtn" onClick={() => setMenuOpen(!menuOpen)}>
@@ -155,55 +317,121 @@ function App() {
 
         {menuOpen && (
           <div className="dropdownMenu">
-            <button onClick={() => scrollToSection("how-it-works")}>
-              How It Works
+            <button onClick={() => navigateHomeSection("how-it-works")}>
+              {t.howItWorks}
             </button>
 
-            <button onClick={() => scrollToSection("mechanics")}>
-              Mechanics Wanted
+            <button onClick={() => navigateHomeSection("mechanics")}>
+              {t.mechanicsWanted}
             </button>
 
-            <button onClick={() => scrollToSection("waitlist")}>
-              Get Early Access
-            </button>
+            {!isAboutPage && (
+              <>
+                <button onClick={() => navigateHomeSection("waitlist")}>
+                  {t.getEarlyAccess}
+                </button>
 
-            <button onClick={() => scrollToSection("contact")}>
-              Contact Us
-            </button>
+                <button onClick={handleApplyMechanic}>{t.applyMechanic}</button>
+              </>
+            )}
+
+            {isAboutPage ? (
+              <button onClick={() => navigateTo("/")}>{t.backHome}</button>
+            ) : (
+              <button onClick={() => navigateTo("/about")}>
+                {t.aboutUs}
+              </button>
+            )}
           </div>
         )}
       </header>
 
+      {isAboutPage ? (
+        <>
+          <main className="aboutPage">
+            <section className="aboutHero">
+              <div className="aboutHeroInner">
+                <p className="sectionLabel">{t.aboutLabel}</p>
+                <h1>{t.aboutTitle}</h1>
+                <p className="aboutIntro">{t.aboutIntro}</p>
+
+                <div className="aboutActions">
+                  <button className="primaryBtn" onClick={handleJoinWaitlist}>
+                    {t.joinWaitlist}
+                  </button>
+                  <button className="secondaryBtn" onClick={handleApplyMechanic}>
+                    {t.applyMechanic}
+                  </button>
+                </div>
+              </div>
+            </section>
+
+            <section className="aboutContent">
+              <div className="aboutCopy">
+                {t.aboutParagraphs.map((paragraph) => (
+                  <p key={paragraph}>{paragraph}</p>
+                ))}
+                <h2>
+                  {t.headlineTop} {t.headlineAccent}
+                </h2>
+              </div>
+
+              <div className="aboutCards">
+                <article className="aboutCard">
+                  <h3>{t.aboutCustomerTitle}</h3>
+                  <p>{t.aboutCustomerText}</p>
+                </article>
+                <article className="aboutCard">
+                  <h3>{t.aboutMechanicTitle}</h3>
+                  <p>{t.aboutMechanicText}</p>
+                </article>
+                <article className="aboutCard">
+                  <h3>{t.aboutTrustTitle}</h3>
+                  <p>{t.aboutTrustText}</p>
+                </article>
+              </div>
+            </section>
+          </main>
+
+          <footer className="footer">
+            <img src={navLogo} alt="The Shop Logo" />
+
+            <p>{t.launchDate}</p>
+
+            <p>
+              {t.headlineTop} {t.headlineAccent}
+            </p>
+          </footer>
+        </>
+      ) : (
+        <>
       <main>
         <section className="hero">
           <div className="heroContent">
-            <p className="launchBadge">Launching June 16, 2026</p>
+            <p className="launchBadge">{t.launchDate}</p>
 
             <h1>
-              Your Car.
+              {t.headlineTop}
               <br />
-              <span>Wherever You Are.</span>
+              <span>{t.headlineAccent}</span>
             </h1>
 
-            <p className="heroText">
-              Certified mobile mechanics come to you, whether you're at home,
-              work, or stuck on the road.
-            </p>
+            <p className="heroText">{t.heroText}</p>
 
             <div className="heroButtons">
               <button className="primaryBtn" onClick={handleJoinWaitlist}>
-                Join Waitlist
+                {t.joinWaitlist}
               </button>
 
               <button className="secondaryBtn" onClick={handleApplyMechanic}>
-                Apply as Mechanic
+                {t.applyMechanic}
               </button>
             </div>
 
             <div className="trustRow">
-              <span>✓ Experienced Mechanics</span>
-              <span>✓ Quality Service</span>
-              <span>✓ Fair & Transparent Pricing</span>
+              <span>✓ {t.experiencedMechanics}</span>
+              <span>✓ {t.qualityService}</span>
+              <span>✓ {t.transparentPricing}</span>
             </div>
           </div>
         </section>
@@ -211,7 +439,9 @@ function App() {
         <section className="section howSection" id="how-it-works">
           <p className="sectionLabel">How It Works</p>
 
-          <h2>Your Car. Wherever You Are.</h2>
+          <h2>
+            {t.headlineTop} {t.headlineAccent}
+          </h2>
 
           <div className="cards">
             <div className="card">
@@ -230,7 +460,7 @@ function App() {
               <h3>Choose A Mechanic</h3>
 
               <p>
-                Pick from available certified mechanics near your location.
+                Pick from available experienced mechanics near your location.
               </p>
             </div>
 
@@ -247,17 +477,17 @@ function App() {
         <section className="section mechanicSection" id="mechanics">
           <p className="sectionLabel">Mechanics Wanted</p>
 
-          <h2>Certified Mobile Mechanics, Join Early.</h2>
+          <h2>Experienced Mobile Mechanics, Join Early.</h2>
 
           <button className="primaryBtn sectionBtn" onClick={handleApplyMechanic}>
-            Apply as Mechanic
+            {t.applyMechanic}
           </button>
         </section>
 
         <section className="section signup" id="waitlist">
-          <p className="sectionLabel">Get Early Access</p>
+          <p className="sectionLabel">{t.getEarlyAccess}</p>
 
-          <h2>Join The Launch List</h2>
+          <h2>Early Customer Access</h2>
 
           <form className="form" onSubmit={handleSubmit}>
             <input
@@ -283,7 +513,7 @@ function App() {
 
             <select name="role" value={formData.role} onChange={handleChange}>
               <option value="Customer">I am a Customer</option>
-              <option value="Mechanic">I am a Certified Mechanic</option>
+              <option value="Mechanic">I am an Experienced Mechanic</option>
             </select>
 
             <input
@@ -305,10 +535,14 @@ function App() {
       <footer className="footer">
         <img src={navLogo} alt="The Shop Logo" />
 
-        <p>Launching June 16, 2026</p>
+        <p>{t.launchDate}</p>
 
-        <p>Your Car. Wherever You Are.</p>
+        <p>
+          {t.headlineTop} {t.headlineAccent}
+        </p>
       </footer>
+        </>
+      )}
     </div>
   );
 }

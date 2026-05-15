@@ -63,6 +63,16 @@ main {
   gap: 12px;
 }
 
+.languageToggle {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px;
+  border-radius: 999px;
+  background: rgba(7, 18, 35, 0.82);
+  border: 1px solid rgba(47, 155, 255, 0.4);
+  box-shadow: inset 0 0 18px rgba(47, 155, 255, 0.08);
+}
+
 .topActions button {
   color: white;
   font-size: 13px;
@@ -71,6 +81,23 @@ main {
   border-radius: 999px;
   cursor: pointer;
   white-space: nowrap;
+}
+
+.topActions .languageToggle button {
+  min-width: 38px;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: #9fd5ff;
+  font-size: 11px;
+  letter-spacing: 0;
+}
+
+.topActions .languageToggle button.active {
+  color: white;
+  background: linear-gradient(135deg, #168cff, #6d4cff);
+  box-shadow: 0 6px 18px rgba(47, 155, 255, 0.22);
 }
 
 .topPrimary {
@@ -82,6 +109,18 @@ main {
 .topSecondary {
   background: rgba(7, 18, 35, 0.82);
   border: 1px solid rgba(47, 155, 255, 0.58);
+}
+
+.topNavLink {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(47, 155, 255, 0.36);
+  color: #cfe9ff;
+  padding-inline: 14px;
+}
+
+.topNavLink:hover {
+  background: rgba(47, 155, 255, 0.12);
+  border-color: rgba(47, 155, 255, 0.58);
 }
 
 .menuBtn {
@@ -227,6 +266,129 @@ main {
   font-size: 16px;
   font-weight: 700;
   text-shadow: 0 0 12px rgba(0, 0, 0, 0.95);
+}
+
+/* ABOUT PAGE */
+.aboutPage {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(47, 155, 255, 0.16), transparent 34%),
+    linear-gradient(180deg, #020712 0%, #061225 48%, #020712 100%);
+}
+
+.aboutHero {
+  padding: 96px 22px 40px;
+  text-align: center;
+  border-bottom: 1px solid rgba(47, 155, 255, 0.22);
+}
+
+.aboutHeroInner {
+  width: 100%;
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+.aboutHero h1 {
+  max-width: 860px;
+  margin: 0 auto;
+  color: white;
+  font-size: clamp(42px, 7vw, 74px);
+  line-height: 1;
+  font-weight: 950;
+  letter-spacing: 0;
+  text-shadow:
+    0 0 20px rgba(0, 0, 0, 0.9),
+    0 0 28px rgba(47, 155, 255, 0.16);
+}
+
+.aboutIntro {
+  max-width: 760px;
+  margin: 24px auto 0;
+  color: #edf4ff;
+  font-size: 19px;
+  line-height: 1.55;
+}
+
+.aboutActions {
+  width: 100%;
+  max-width: 560px;
+  margin: 32px auto 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.aboutActions .primaryBtn,
+.aboutActions .secondaryBtn {
+  min-height: 58px;
+}
+
+.aboutContent {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 60px 22px 90px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.aboutCopy {
+  padding: 34px;
+  border-radius: 26px;
+  background: rgba(7, 16, 30, 0.76);
+  border: 1px solid rgba(47, 155, 255, 0.32);
+  box-shadow:
+    0 30px 70px rgba(0, 0, 0, 0.35),
+    inset 0 0 42px rgba(47, 155, 255, 0.04);
+  text-align: left;
+}
+
+.aboutCopy p {
+  color: #cbd8ea;
+  font-size: 17px;
+  line-height: 1.68;
+  margin-bottom: 18px;
+}
+
+.aboutCopy h2 {
+  margin-top: 30px;
+  color: #3aa0ff;
+  font-size: clamp(30px, 5vw, 48px);
+  line-height: 1.04;
+  font-weight: 950;
+  letter-spacing: 0;
+  text-shadow:
+    0 0 14px rgba(47, 155, 255, 0.5),
+    0 0 28px rgba(47, 155, 255, 0.24);
+}
+
+.aboutCards {
+  display: grid;
+  gap: 18px;
+}
+
+.aboutCard {
+  padding: 24px;
+  border-radius: 22px;
+  background:
+    linear-gradient(180deg, rgba(12, 28, 52, 0.92), rgba(6, 14, 28, 0.95));
+  border: 1px solid rgba(47, 155, 255, 0.35);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+  text-align: left;
+}
+
+.aboutCard h3 {
+  margin-bottom: 10px;
+  color: white;
+  font-size: 21px;
+}
+
+.aboutCard p {
+  color: #c8d4e5;
+  font-size: 16px;
+  line-height: 1.55;
 }
 
 /* SECTIONS */
@@ -402,9 +564,14 @@ main {
     gap: 6px;
   }
 
-  .topActions button {
+  .topActions > button {
+    display: none;
+  }
+
+  .topActions .languageToggle button {
     font-size: 10px;
-    padding: 8px 9px;
+    min-width: 34px;
+    padding: 7px 8px;
   }
 
   .menuBtn {
@@ -450,6 +617,35 @@ main {
 
   .heroButtons {
     grid-template-columns: 1fr;
+  }
+
+  .aboutHero {
+    padding: 70px 16px 34px;
+  }
+
+  .aboutHero h1 {
+    font-size: clamp(36px, 11vw, 52px);
+  }
+
+  .aboutIntro {
+    font-size: 16px;
+  }
+
+  .aboutActions {
+    grid-template-columns: 1fr;
+  }
+
+  .aboutContent {
+    padding: 38px 16px 70px;
+    grid-template-columns: 1fr;
+  }
+
+  .aboutCopy {
+    padding: 24px;
+  }
+
+  .aboutCopy p {
+    font-size: 16px;
   }
 
   .trustRow {

@@ -195,6 +195,18 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!isAboutPage) return;
+
+    const frameId = window.requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+    };
+  }, [isAboutPage]);
+
   const submitSignup = async () => {
     if (!formData.fullName.trim() || !formData.email.trim()) {
       setStatus("Please enter your name and email.");

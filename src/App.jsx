@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { db } from "./firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import "./App.css";
@@ -88,6 +88,12 @@ const translations = {
   },
 };
 
+const scrollPageToTop = () => {
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+  window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+};
+
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [route, setRoute] = useState(() => window.location.pathname);
@@ -121,7 +127,10 @@ function App() {
     window.history.pushState({}, "", nextRoute);
     setRoute(nextRoute);
     setMenuOpen(false);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    if (nextRoute === "/" || nextRoute === "/about") {
+      scrollPageToTop();
+    }
   };
 
   const navigateHomeSection = (id, role) => {
@@ -183,6 +192,17 @@ function App() {
   }, [isAdminPage]);
 
   useEffect(() => {
+    if (!("scrollRestoration" in window.history)) return;
+
+    const previousScrollRestoration = window.history.scrollRestoration;
+    window.history.scrollRestoration = "manual";
+
+    return () => {
+      window.history.scrollRestoration = previousScrollRestoration;
+    };
+  }, []);
+
+  useEffect(() => {
     const handlePopState = () => {
       setRoute(window.location.pathname);
       setMenuOpen(false);
@@ -195,16 +215,11 @@ function App() {
     };
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!isAboutPage) return;
 
-    const frameId = window.requestAnimationFrame(() => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
-
-    return () => {
-      window.cancelAnimationFrame(frameId);
-    };
+    scrollPageToTop();
+    setScrolled(false);
   }, [isAboutPage]);
 
   const submitSignup = async () => {

@@ -7,7 +7,7 @@ import navLogo from "./assets/Theshop1transparent.png";
 
 const translations = {
   en: {
-    launchDate: "Launching June 16, 2026",
+    launchDate: "Coming Soon",
     headlineTop: "Your Car.",
     headlineAccent: "Wherever You Are.",
     heroText:
@@ -47,7 +47,7 @@ const translations = {
       "Transparent pricing, clear scheduling, real-time updates, and direct communication help customers and mechanics work with confidence.",
   },
   es: {
-    launchDate: "Lanzamiento el 16 de junio de 2026",
+    launchDate: "Próximamente",
     headlineTop: "Tu auto.",
     headlineAccent: "Dondequiera que estés.",
     heroText:
@@ -94,6 +94,12 @@ const scrollPageToTop = () => {
   window.scrollTo({ top: 0, left: 0, behavior: "auto" });
 };
 
+const resetPageScrollAfterNavigation = () => {
+  window.setTimeout(() => {
+    scrollPageToTop();
+  }, 0);
+};
+
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [route, setRoute] = useState(() => window.location.pathname);
@@ -129,7 +135,7 @@ function App() {
     setMenuOpen(false);
 
     if (nextRoute === "/" || nextRoute === "/about") {
-      scrollPageToTop();
+      resetPageScrollAfterNavigation();
     }
   };
 
@@ -218,7 +224,7 @@ function App() {
   useLayoutEffect(() => {
     if (!isAboutPage) return;
 
-    scrollPageToTop();
+    resetPageScrollAfterNavigation();
     setScrolled(false);
   }, [isAboutPage]);
 
@@ -235,7 +241,7 @@ function App() {
       await addDoc(collection(db, "launchSignups"), {
         ...formData,
         source: "landing-page",
-        launchDate: "June 16, 2026",
+        launchDate: "Coming Soon",
         leadStatus: "New Lead",
         createdAt: serverTimestamp(),
       });
